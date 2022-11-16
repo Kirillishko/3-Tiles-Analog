@@ -7,6 +7,7 @@ using UnityEditor;
 
 public class LevelFormSaver : MonoBehaviour
 {
+    private const string Folder = "/Levels/";
     private const string Extension = ".txt";
     
     [SerializeField] private string _fileName;
@@ -15,12 +16,12 @@ public class LevelFormSaver : MonoBehaviour
     [ContextMenu("SaveLevel")]
     public void SaveLevel()
     {
-        string path = Application.dataPath + "/Levels/" + _fileName + Extension;
+        string path = Application.dataPath + Folder + _fileName + Extension;
         var writer = new StreamWriter(path);
 
         for (int i = 0; i < _layers.Length; i++)
         {
-            writer.WriteLine($"l{i}");
+            writer.WriteLine($"l {i + 1}");
             var layer = _layers[i];
 
             foreach (var tile in layer.GetComponentsInChildren<Tile>())

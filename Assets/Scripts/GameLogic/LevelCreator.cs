@@ -1,18 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
-public class LevelCreatoe : MonoBehaviour
+public class LevelCreator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Canvas _canvas;
+    [SerializeField] private LevelData _levelData;
+    [SerializeField] private TileInventory _tileInventory;
+    [SerializeField] private PlayerInput _playerInput;
+    [SerializeField] private Tile _tileTemplate;
 
-    // Update is called once per frame
-    void Update()
+    private void Create()
     {
+        string line;
+        string path = Application.dataPath + "/Levels/" + _levelData.TilePositionsPath + ".exe";
+        var reader = new StreamReader(path);
         
+        while ((line = reader.ReadLine()) != null)
+        {
+            string[] positions = line.Split(" ");
+
+            if (positions[0] == "l")
+            {
+
+            }
+        }
     }
 }

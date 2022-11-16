@@ -18,11 +18,6 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
         //_tileView.Init(_icon);
     }
 
-    public void Destroy()
-    {
-        _tileView.Destroy();
-    }
-    
     public void OnPointerDown(PointerEventData eventData)
     {
         _input.SetHashCode(_hashCode);
@@ -34,5 +29,10 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
         {
             _tileView.Move(_tileInventory.GetNextPosition);
         }
+    }
+
+    public void Destroy()
+    {
+        _tileView.Destroy();
     }
 }

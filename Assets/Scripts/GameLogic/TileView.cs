@@ -1,23 +1,32 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TileView : MonoBehaviour
 {
     private const float MoveDuration = 1f;
     
     [SerializeField] private TileInventory _tileInventory;
-    
-    private SpriteRenderer _spriteRenderer;
+    [SerializeField] private Image _image;
 
-    public void Init(Sprite icon)
+    private Tile _tile;
+
+    public void Init(TileInventory tileInventory, Sprite icon)
     {
-        _spriteRenderer.sprite = icon;
+        _tileInventory = tileInventory;
+        _image.sprite = icon;
+
+        var endScale = transform.localScale;
+        transform.localScale = Vector3.zero;
+        transform.DOScale(endScale, 0.3f);
     }
 
-    public void Move(Vector3 position)
+    public void Move(Vector3 position, bool withChecks = true)
     {
-        transform.DOMove(position, MoveDuration).
-            OnComplete(_tileInventory.TryFindEqualTiles);
+        var move = transform.DOMove(position, MoveDuration);
+        
+        if (withChecks)
+            move.OnComplete(_tileInventory.TryFindEqualTiles);
     }
 
     public void Destroy()

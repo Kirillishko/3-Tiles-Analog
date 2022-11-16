@@ -16,9 +16,16 @@ public class LevelFormSaver : MonoBehaviour
     [ContextMenu("SaveLevel")]
     public void SaveLevel()
     {
+        int tilesCount = 0;
         string path = Application.dataPath + Folder + _fileName + Extension;
         var writer = new StreamWriter(path);
 
+        foreach (var t in _layers)
+            for (int index = 0; index < t.GetComponentsInChildren<Tile>().Length; index++)
+                tilesCount++;
+        
+        writer.WriteLine(tilesCount);
+        
         for (int i = 0; i < _layers.Length; i++)
         {
             writer.WriteLine($"l {i + 1}");
@@ -30,7 +37,7 @@ public class LevelFormSaver : MonoBehaviour
                 writer.WriteLine($"{position.x} {position.y}");
             }
         }
-
+        
         writer.Close();
     }
 }

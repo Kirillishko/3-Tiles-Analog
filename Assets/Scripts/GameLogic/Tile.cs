@@ -1,21 +1,20 @@
-using UnityEngine;
+using System;using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(TileView))]
-public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
+public class Tile : MonoBehaviour, IEquatable<Tile>, IPointerUpHandler, IPointerDownHandler
 {
     [SerializeField] private PlayerInput _input;
     [SerializeField] private TileInventory _tileInventory;
     
     private TileView _tileView;
-    private Sprite _icon;
     private int _hashCode;
+    private int _index;
 
-    private void Start()
+    private void Awake()
     {
         _hashCode = transform.GetHashCode();
         _tileView = GetComponent<TileView>();
-        //_tileView.Init(_icon);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -25,14 +24,37 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (_input.IsEqualHashCode(_hashCode))
-        {
-            _tileView.Move(_tileInventory.GetNextPosition);
-        }
+        if (_input.IsEqualHashCode(_hashCode) == false)
+            return;
+
+
+        if (_tileInventory.TryGetFreePosition(this, out var position))
+            Move(position);
+    }
+
+    public void Init(PlayerInput playerInput, TileInventory tileInventory, TileIcon tileIcon)
+    {
+        _input = playerInput;
+        _tileInventory = tileInventory;
+        _index = tileIcon.Index;
+        _tileView.Init(tileInventory, tileIcon.Icon);
+    }
+
+    public void Move(Vector3 position, bool withChecks = true)
+    {
+        _tileView.Move(position, false);
     }
 
     public void Destroy()
     {
         _tileView.Destroy();
+    }
+
+    public bool Equals(Tile tile)
+    {
+        if (tile == null)
+            return false;
+        
+        return _index == tile._index;
     }
 }
